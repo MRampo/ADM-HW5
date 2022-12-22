@@ -4,23 +4,48 @@ import re
 import numpy as np
 
 
-class Graph(object):
+class Graph:
     def __init__(self, df_hero_net=None, df_edges=None, df_nodes=None):
         try:
-            self.df_hero_net = pd.read_csv(df_hero_net)
+            self.df_hero_net = df_hero_net
         except:
             pass
         try:
-            self.df_nodes = pd.read_csv(df_nodes)
+            self.df_nodes = df_nodes
         except:
             pass
 
         try:
-            self.df_edges = pd.read_csv(df_edges)
+            self.df_edges = df_edges
         except:
             pass
         self.G_2 = nx.Graph()
         self.G_1 = nx.Graph()
+
+    def create_graph_hero_network(self):
+        self.df_hero_net = self.df_hero_net.sort_values(by=['hero1', 'hero2']).reset_index(drop=True)
+        self.df_hero_net['Number'] = self.df_hero_net.groupby(['hero1', 'hero2']).cumcount().add(1)
+        self.df_hero_net = self.df_hero_net.sort_values(by='Number', ascending=False)
+        self.df_hero_net = self.df_hero_net.drop_duplicates(subset=['hero1', 'hero2'], keep='first')
+
+        indexes = self.df_hero_net.query("hero1 == hero2").index
+        self.df_hero_net = self.df_hero_net.drop(indexes)
+
+        mask = self.df_hero_net['hero1'] > self.df_hero_net['hero2']
+        # swap the values in those rows
+        self.df_hero_net.loc[mask, ['hero1', 'hero2']] = self.df_hero_net.loc[mask, ['hero2', 'hero1']].values
+
+        self.df_hero_net = self.df_hero_net.groupby(['hero1', 'hero2'], sort=False).agg(
+            {'hero1': 'first', 'hero2': 'first', 'Number': 'sum'}).reset_index(drop=True)
+
+        self.df_hero_net['Number'] = self.df_hero_net['Number'].apply(lambda x: 1 / x)
+
+        array_hero_net = self.df_hero_net.to_numpy()
+
+        # Now we can create the graph
+        self.G_2.add_weighted_edges_from(array_hero_net)
+
+        return self.G_2
 
     def create_graph_edges_nodes(self):
 

@@ -136,3 +136,45 @@ class Preprocessing:
         new_string = re.sub(pattern, "", new_string)
 
         return new_string
+
+    def findNHeroes(edges: pd.DataFrame, N: int) -> pd.DataFrame:
+        NHeroes = list(df_edges.groupby(by="hero")
+                       .count()  # count number of repetition
+                       .sort_values(by="comic", ascending=False)  # Sort values by "comic"
+                       .head(N)  # get top N
+                       .reset_index()  # reset index
+                       .hero)  # get only the names of our heroes
+        return NHeroes
+
+    def functionality_2(graph, metric, node, n_heroes=None):
+        if n_heroes != None:
+            n = findNHeroes(df_edges, n_heroes)
+
+        if metric == 'Betweeness':
+            betweenness = nx.betweenness_centrality(graph, k=10, seed=1234, weight='weight')
+
+            output = pd.DataFrame.from_dict(betweenness, orient='index',
+                                            columns=['Betweenness']).sort_values(by='Betweenness', ascending=False)
+            try:
+                whole_output = output.loc[n, :]
+            except:
+                pass
+        if metric == 'Closeness':
+            closeness = nx.closeness_centrality(graph, distance='weight')
+            output = pd.DataFrame.from_dict(closeness, orient='index',
+                                            columns=['Closeness']).sort_values(by='Closeness', ascending=False)
+            try:
+                whole_output = output.loc[n, :]
+            except:
+                pass
+
+        if metric == 'PageRank':
+            pagerank = nx.pagerank(graph, weight='weight')
+            output = pd.DataFrame.from_dict(pagerank, orient='index',
+                                            columns=['PageRank']).sort_values(by='PageRank', ascending=False)
+            try:
+                whole_output = output.loc[n, :]
+            except:
+                pass
+
+        return output.loc[node, :], whole_output

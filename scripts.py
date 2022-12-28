@@ -38,7 +38,7 @@ class Graph:
         self.df_hero_net = self.df_hero_net.groupby(['hero1', 'hero2'], sort=False).agg(
             {'hero1': 'first', 'hero2': 'first', 'Number': 'sum'}).reset_index(drop=True)
 
-        self.df_hero_net['Number'] = self.df_hero_net['Number'].apply(lambda x: 1 / x)
+        self.df_hero_net['Number'] = self.df_hero_net['Number'].apply(lambda x: round(1 / x, 3))
 
         array_hero_net = self.df_hero_net.to_numpy()
 
@@ -49,8 +49,8 @@ class Graph:
 
     def create_graph_edges_nodes(self):
 
-        self.G_2.add_nodes_from(self.df_nodes.loc[self.df_nodes.type == 'hero'].node, size='H')
-        self.G_2.add_nodes_from(self.df_nodes.loc[self.df_nodes.type == 'comic'].node, size='C')
+        self.G_2.add_nodes_from(self.df_nodes.loc[self.df_nodes.type == 'hero'].node, type='H')
+        self.G_2.add_nodes_from(self.df_nodes.loc[self.df_nodes.type == 'comic'].node, type='C')
         self.G_2.add_edges_from(self.df_edges.to_numpy())
         return self.G_2
 
@@ -107,6 +107,10 @@ class Preprocessing:
         # Clean the values in both columns
         self.df_wrong.hero1 = self.df_wrong.hero1.apply(lambda row: Preprocessing.cleaning(row))
         self.df_wrong.hero2 = self.df_wrong.hero2.apply(lambda row: Preprocessing.cleaning(row))
+
+        # Clean edges.csv
+
+        self.df_right.hero = self.df_right.hero.apply(lambda row : Preprocessing.cleaning(row))
 
         # Replace the wrong names with the right ones
         self.dic = Preprocessing().get_names()

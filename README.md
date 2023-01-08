@@ -2,7 +2,7 @@
 ## Table of Contents
 * [General Info](#general-info)
 * [Repository Structure](#repository-structure)
-* [NBViewer](nbviewer)
+* [NBViewer](#nbviewer)
 
 ## General Info
 This is the repository of the 5th homework of the course ADM at sapienza in the academic year 2022/2023

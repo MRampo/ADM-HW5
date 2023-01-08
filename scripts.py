@@ -218,30 +218,32 @@ def find_edges(path):
 
 
 def bfs_unweighted(graph,source):
-    Q = Queue()
+    Q = Queue() ## create a queue 
     graph_dict = nx.to_dict_of_dicts(graph)
-    visited = {key: False for key in graph_dict.keys()}
+    visited = {key: False for key in graph_dict.keys()} ## Inizialize a dictionary where each key is a node and the value is False
 
-    Q.put((source,source))
-    visited[source] = True
-    bfs_edges = list()
+    Q.put((source,source)) ## put the source inside the queue
+    visited[source] = True ## source in visited is True now
+    bfs_edges = list() ## use a list to store the paths
     try:
-        while Q:
-            s,path = Q.get(0)
+        while Q: ## while the queue is not empty
+            s,path = Q.get(0) # drop the first element of the queue
 
 
             if s != source:
-                bfs_edges.append((path,s))
+                bfs_edges.append((path,s)) ## put this element inside the paths list
 
-            for neighbor in graph_dict[s].keys():
+            for neighbor in graph_dict[s].keys(): ## for each neighbor od s
                 if visited[neighbor] == False:
-                    Q.put((neighbor,s))
-                    visited[neighbor] = True
+                    Q.put((neighbor,s)) ## put the neighbour into the queue
+                    visited[neighbor] = True ## change neighbor in visited equal to True
 
     except:
         pass
     return bfs_edges
 
+## Below there is the BFS algorithm considering the weights of the edges, the steps are the same, the only difference is that we also add the weight of the edge
+## into the queue
 
 def bfs_weighted(graph,source):
 

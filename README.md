@@ -23,4 +23,4 @@ This repository is structured in the following way:
 
 ## NBViewer
 
-Here is the link for the notebook on NBViewer: [Link Here](PLACE LINK HERE)
+Here is the link for the notebook on NBViewer: [Link Here](https://nbviewer.org/github/MRampo/ADM-HW5/blob/main/main.ipynb)

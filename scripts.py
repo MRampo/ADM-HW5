@@ -47,7 +47,7 @@ def findNetworksHub(graph, typeG, degreeDist):
     return nodes
 
 
-def findNNodes(graph, typeG, edges):
+def findNNodes(graph, typeG):
     #take the number of nodes
     numberNodes = len(graph)
     
